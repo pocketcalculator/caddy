@@ -1,0 +1,49 @@
+# Advanced Caddy build with Cloudflare DNS plugin using official builder/runtime
+
+# Stage 1: Use official Caddy builder (pins compatible Go toolchain and flags)
+FROM caddy:2-builder-alpine AS builder
+
+# Build Caddy with Cloudflare DNS plugin
+# Build latest Caddy with Cloudflare DNS plugin
+RUN xcaddy build \
+    --with github.com/caddy-dns/cloudflare
+
+# Stage 2: Use official lightweight runtime
+FROM caddy:2-alpine
+
+# Copy the custom-built Caddy binary
+COPY --from=builder /usr/bin/caddy /usr/bin/caddy
+
+# Create caddy user and group, set up directories and capabilities
+RUN apk --no-cache add libcap && \
+    addgroup -g 1000 caddy && \
+    adduser -D -s /bin/sh -u 1000 -G caddy caddy && \
+    mkdir -p /data /config /etc/caddy && \
+    chown -R caddy:caddy /data /config /etc/caddy && \
+    setcap cap_net_bind_service=+ep /usr/bin/caddy && \
+    rm -rf /var/cache/apk/*
+
+# Copy custom configuration file
+COPY Caddyfile-cloudflare /etc/caddy/Caddyfile
+
+# Copy any additional static files (optional)
+COPY --chown=caddy:caddy html/ /usr/share/caddy/
+
+# Switch to caddy user
+USER caddy
+
+# Set working directory
+WORKDIR /usr/share/caddy
+
+# Expose ports
+EXPOSE 80 443 2019
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+    CMD caddy version || exit 1
+
+# Use environment variables for configuration
+ENV CADDY_ADMIN=0.0.0.0:2019
+
+# Run Caddy
+CMD ["caddy", "run", "--config", "/etc/caddy/Caddyfile", "--adapter", "caddyfile"]

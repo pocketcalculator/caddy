@@ -1,0 +1,58 @@
+# Caddyfile with Cloudflare DNS integration for automatic SSL certificates
+{
+    # Global options
+    admin localhost:2019
+    
+    # Email for ACME account
+    email {$CADDY_ACME_EMAIL:admin@example.com}
+    
+    # Use Cloudflare DNS for challenges (requires API token)
+    acme_dns cloudflare {$CLOUDFLARE_API_TOKEN}
+    
+    log {
+        output stdout
+        format console
+    }
+}
+
+# Health check endpoint (no auth required)
+:80 {
+    respond /health "OK" 200
+    
+    # Redirect HTTP to HTTPS
+    redir https://{host}{uri} permanent
+}
+
+# Example HTTPS site with automatic SSL via Cloudflare DNS
+{$DOMAIN:localhost} {
+    # Serve static files from /usr/share/caddy
+    root * /usr/share/caddy
+    file_server
+    
+    # Example: Forward auth to Authentik for protected paths
+    # @protected {
+    #     path /admin/*
+    #     path /api/*
+    # }
+    # 
+    # # Forward authentication to Authentik
+    # forward_auth @protected authentik:9000 {
+    #     uri /outpost.goauthentik.io/auth/caddy
+    #     copy_headers Remote-User Remote-Groups Remote-Email
+    # }
+    
+    # Logging
+    log {
+        output stdout
+        format console
+    }
+    
+    # Security headers
+    header {
+        Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+        X-Content-Type-Options "nosniff"
+        X-Frame-Options "DENY"
+        X-XSS-Protection "1; mode=block"
+        Referrer-Policy "strict-origin-when-cross-origin"
+    }
+}

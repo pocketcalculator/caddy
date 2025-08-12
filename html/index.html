@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Custom Caddy with Cloudflare DNS</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-height: 100vh;
+        }
+        .container {
+            background: rgba(255,255,255,0.1);
+            padding: 2rem;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+        h1 { color: #fff; margin-bottom: 1rem; }
+        .status { 
+            background: rgba(46, 204, 113, 0.2);
+            padding: 1rem;
+            border-radius: 5px;
+            margin: 1rem 0;
+        }
+        .plugin-list {
+            background: rgba(52, 152, 219, 0.2);
+            padding: 1rem;
+            border-radius: 5px;
+            margin: 1rem 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 Custom Caddy Server</h1>
+        <div class="status">
+            <h3>✅ Server Status: Running</h3>
+            <p>Your custom Caddy server with Cloudflare DNS plugin is working correctly!</p>
+        </div>
+        
+        <div class="plugin-list">
+            <h3>🔌 Loaded Plugins</h3>
+            <ul>
+                <li>Cloudflare DNS Challenge</li>
+                <li>Automatic HTTPS</li>
+                <li>File Server</li>
+                <li>Health Check</li>
+            </ul>
+        </div>
+        
+        <p><strong>Cloudflare Integration:</strong> This server uses Cloudflare DNS challenges for automatic SSL certificate provisioning.</p>
+        <p><strong>Health Check:</strong> <a href="/health" style="color: #fff;">/health</a></p>
+        <p><strong>Admin API:</strong> Port 2019 (localhost only)</p>
+    </div>
+</body>
+</html>

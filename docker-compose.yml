@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  caddy:
+    # For development - build locally
+    # build:
+    #   context: .
+    #   dockerfile: Dockerfile.cloudflare
+    
+    # For production - use registry image
+    image: ghcr.io/pocketcalculator/caddy-cf:latest
+    container_name: caddy-cloudflare
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+      - "2019:2019"
+    volumes:
+      - ./Caddyfile-cloudflare:/etc/caddy/Caddyfile:ro
+      - ./html:/usr/share/caddy:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    environment:
+      - CADDY_ADMIN=localhost:2019
+      # Cloudflare configuration - set these in your .env file
+      - CLOUDFLARE_API_TOKEN=${CLOUDFLARE_API_TOKEN}
+      - DOMAIN=${DOMAIN:-localhost}
+      - CADDY_ACME_EMAIL=${CADDY_ACME_EMAIL:-admin@example.com}
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - caddy_network
+
+volumes:
+  caddy_data:
+    driver: local
+  caddy_config:
+    driver: local
+
+networks:
+  caddy_network:
+    driver: bridge

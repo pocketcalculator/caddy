@@ -1,0 +1,33 @@
+# Simple test Caddyfile with accessible admin API
+{
+    admin 0.0.0.0:2019
+    
+    log {
+        output stdout
+        format console
+    }
+}
+
+# HTTP server - serves health and redirects others
+:80 {
+    # Health check responds directly
+    handle /health {
+        respond "OK" 200
+    }
+    
+    # Everything else redirects to HTTPS
+    handle {
+        redir https://{host}{uri} permanent
+    }
+}
+
+# HTTPS server with self-signed cert for localhost
+localhost:443 {
+    root * /usr/share/caddy
+    file_server
+    
+    # Health check on HTTPS too
+    handle /health {
+        respond "OK" 200
+    }
+}
