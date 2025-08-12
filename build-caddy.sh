@@ -12,8 +12,8 @@ cd "$SCRIPT_DIR"
 
 # Configuration
 IMAGE_NAME="caddy-cf"
-VERSION="test"
-REGISTRY="docker.io"  # Change this to your registry (e.g., ghcr.io, registry.gitlab.com)
+VERSION="latest"
+REGISTRY="ghcr.io"  # GitHub Container Registry
 NAMESPACE="pocketcalculator"  # Change this to your Docker Hub username or organization
 
 # Full image name
