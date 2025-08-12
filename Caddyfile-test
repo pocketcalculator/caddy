@@ -1,0 +1,50 @@
+# Test Caddyfile without Cloudflare DNS (for local testing)
+{
+    # Global options
+    admin localhost:2019
+    
+    # Email for ACME account
+    email admin@example.com
+    
+    log {
+        output stdout
+        format console
+    }
+}
+
+# Health check endpoint (no auth required)
+:80 {
+    # Handle health check first
+    @health {
+        path /health
+    }
+    respond @health "OK" 200
+    
+    # Redirect all other HTTP requests to HTTPS (excluding health)
+    @not_health {
+        not path /health
+    }
+    redir @not_health https://{host}{uri} permanent
+}
+
+# HTTPS site for testing (uses self-signed cert)
+localhost {
+    # Serve static files from /usr/share/caddy
+    root * /usr/share/caddy
+    file_server
+    
+    # Logging
+    log {
+        output stdout
+        format console
+    }
+    
+    # Security headers
+    header {
+        Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+        X-Content-Type-Options "nosniff"
+        X-Frame-Options "DENY"
+        X-XSS-Protection "1; mode=block"
+        Referrer-Policy "strict-origin-when-cross-origin"
+    }
+}

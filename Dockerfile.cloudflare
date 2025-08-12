@@ -18,10 +18,7 @@ COPY --from=builder /usr/bin/caddy /usr/bin/caddy
 COPY Caddyfile-cloudflare /etc/caddy/Caddyfile
 
 # Copy any additional static files (optional)
-COPY --chown=caddy:caddy html/ /usr/share/caddy/
-
-# Switch to caddy user
-USER caddy
+COPY html/ /usr/share/caddy/
 
 # Set working directory
 WORKDIR /usr/share/caddy
