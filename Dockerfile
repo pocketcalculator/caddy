@@ -15,7 +15,7 @@ FROM caddy:2-alpine
 COPY --from=builder /usr/bin/caddy /usr/bin/caddy
 
 # Copy custom configuration file
-COPY Caddyfile-cloudflare /etc/caddy/Caddyfile
+COPY Caddyfile /etc/caddy/Caddyfile
 
 # Copy any additional static files (optional)
 COPY html/ /usr/share/caddy/

@@ -1,10 +1,17 @@
-# Test Caddyfile without Cloudflare DNS (for local testing)
+# Test Caddyfile without Cloudflare DNS integration
+# Used for testing when no CLOUDFLARE_API_TOKEN is provided
 {
     # Global options
     admin localhost:2019
     
-    # Email for ACME account
-    email admin@example.com
+    # Email for ACME account (testing only)
+    email test@example.com
+    
+    # Skip certificate verification for internal testing
+    skip_install_trust
+    
+    # Disable automatic HTTPS for testing
+    auto_https off
     
     log {
         output stdout
@@ -12,23 +19,24 @@
     }
 }
 
-# Health check endpoint (no auth required)
+# Health check endpoint and static files on HTTP
 :80 {
-    # Handle health check first
-    @health {
-        path /health
-    }
-    respond @health "OK" 200
+    # Health check endpoint
+    respond /health "OK" 200
     
-    # Redirect all other HTTP requests to HTTPS (excluding health)
-    @not_health {
-        not path /health
+    # Serve static files
+    root * /usr/share/caddy
+    file_server
+    
+    # Add some basic headers for testing
+    header {
+        X-Test-Mode "true"
+        X-Content-Type-Options "nosniff"
     }
-    redir @not_health https://{host}{uri} permanent
 }
 
-# HTTPS site for testing (uses self-signed cert)
-localhost {
+# HTTPS endpoint with self-signed certificates for testing
+localhost:443 {
     # Serve static files from /usr/share/caddy
     root * /usr/share/caddy
     file_server
@@ -39,12 +47,14 @@ localhost {
         format console
     }
     
-    # Security headers
+    # Security headers for testing
     header {
-        Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+        X-Test-Mode "true"
         X-Content-Type-Options "nosniff"
         X-Frame-Options "DENY"
         X-XSS-Protection "1; mode=block"
-        Referrer-Policy "strict-origin-when-cross-origin"
     }
+    
+    # Use self-signed certificates for localhost
+    tls internal
 }

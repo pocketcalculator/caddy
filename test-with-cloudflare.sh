@@ -6,8 +6,8 @@
 set -e
 
 # Configuration
-IMAGE_NAME="caddy-cf:test"
-CONTAINER_NAME="caddy-cf-test"
+IMAGE_NAME="caddy-cf:latest"
+CONTAINER_NAME="caddy-cf-latest"
 
 # Colors for output
 GREEN='\033[0;32m'

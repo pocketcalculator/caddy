@@ -29,18 +29,6 @@
     root * /usr/share/caddy
     file_server
     
-    # Example: Forward auth to Authentik for protected paths
-    # @protected {
-    #     path /admin/*
-    #     path /api/*
-    # }
-    # 
-    # # Forward authentication to Authentik
-    # forward_auth @protected authentik:9000 {
-    #     uri /outpost.goauthentik.io/auth/caddy
-    #     copy_headers Remote-User Remote-Groups Remote-Email
-    # }
-    
     # Logging
     log {
         output stdout

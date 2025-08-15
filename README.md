@@ -70,7 +70,7 @@ A production-ready Docker image of Caddy web server with the Cloudflare DNS plug
 
 ### Caddyfile
 
-The default Caddyfile (`Caddyfile-cloudflare`) includes:
+The default Caddyfile (`Caddyfile`) includes:
 - Automatic HTTPS with Cloudflare DNS challenges
 - Security headers
 - Health check endpoint (`/health`)
@@ -101,8 +101,8 @@ To push to GitHub Container Registry:
 
 ```
 .
-├── Dockerfile.cloudflare      # Multi-stage Docker build
-├── Caddyfile-cloudflare       # Caddy configuration
+├── Dockerfile                 # Multi-stage Docker build
+├── Caddyfile                  # Caddy configuration
 ├── docker-compose.yml         # Docker Compose setup
 ├── build-caddy.sh            # Build script
 ├── test-caddy.sh             # Comprehensive test suite

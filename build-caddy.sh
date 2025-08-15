@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Caddy Docker Build Script (Cloudflare DNS plugin)
-# Uses Dockerfile.cloudflare and tags image as caddy-cf:test
+# Uses Dockerfile and tags image as caddy-cf:latest
 # Based on official Caddy documentation: https://caddyserver.com/docs/build#docker
 
 set -e
@@ -29,7 +29,7 @@ echo ""
 # Build the Docker image
 echo "📦 Building Docker image..."
 docker build \
-    --file Dockerfile.cloudflare \
+    --file Dockerfile \
     --tag "${IMAGE_NAME}:${VERSION}" \
     --tag "${FULL_IMAGE_NAME}" \
     --build-arg BUILDKIT_INLINE_CACHE=1 \

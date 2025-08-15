@@ -1,22 +1,21 @@
-version: '3.8'
 
 services:
   caddy:
     # For development - build locally
     # build:
     #   context: .
-    #   dockerfile: Dockerfile.cloudflare
+    #   dockerfile: Dockerfile
     
     # For production - use registry image
     image: ghcr.io/pocketcalculator/caddy-cf:latest
-    container_name: caddy-cloudflare
+    container_name: caddy
     restart: unless-stopped
     ports:
       - "80:80"
       - "443:443"
       - "2019:2019"
     volumes:
-      - ./Caddyfile-cloudflare:/etc/caddy/Caddyfile:ro
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
       - ./html:/usr/share/caddy:ro
       - caddy_data:/data
       - caddy_config:/config
