@@ -11,8 +11,8 @@ VERSION="latest"
 REGISTRY="ghcr.io"  # GitHub Container Registry
 NAMESPACE="pocketcalculator"  # Your actual GitHub username
 
-# Also support test version
-LOCAL_VERSION=${1:-"test"}  # Use command line arg or default to "test"
+# Support custom local version via command line argument
+LOCAL_VERSION=${1:-"latest"}  # Use command line arg or default to "latest"
 
 # Full image names
 LOCAL_IMAGE_NAME="${IMAGE_NAME}:${LOCAL_VERSION}"
